@@ -1295,7 +1295,10 @@ async function doSave() {
     showToast(tr('config.saving', null, '正在保存更改…'), 'info');
     await _api('POST', '/config', patch);
     // Merge into local _cfg so re-render shows correct values.
-    Object.entries(_dirty).forEach(([fp, v]) => _setByPath(_cfg, fp, v));
+    Object.entries(_dirty).forEach(([fp, v]) => {
+      _setByPath(_cfg, fp, v);
+      if (fp === 'app.app_key') adminKey.set(String(v));
+    });
     _dirty = {};
     // Re-render to clear modified state
     renderAll();
